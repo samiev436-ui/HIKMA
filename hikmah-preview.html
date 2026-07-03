@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HIKMAH — превью интерфейса</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --emerald-deep:#1a4d3e;
+    --emerald:#2f7d63;
+    --gold:#cfa53c;
+    --gold-soft:#f6ecd2;
+    --gold-dark:#8a6a1f;
+    --bg:#faf9f5;
+    --muted:#f1efe9;
+    --card:#ffffff;
+    --border:#e6e2d8;
+    --fg:#1f2937;
+    --muted-fg:#6b7280;
+    --destructive:#c0392b;
+    --radius:16px;
+    --shadow:0 4px 20px rgba(26,77,62,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Work Sans',sans-serif;
+    background:var(--bg);
+    color:var(--fg);
+    -webkit-font-smoothing:antialiased;
+  }
+  .font-display{font-family:'Instrument Serif',serif; font-weight:400;}
+  .font-arabic{font-family:'Amiri',serif; direction:rtl;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+
+  /* ---- top switcher ---- */
+  .preview-bar{
+    position:sticky; top:0; z-index:100;
+    display:flex; align-items:center; gap:10px;
+    padding:10px 16px;
+    background:var(--emerald-deep); color:#fff;
+    font-size:13px;
+  }
+  .preview-bar .tag{
+    background:rgba(255,255,255,.15); padding:3px 10px; border-radius:999px; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+  }
+  .preview-bar .spacer{flex:1;}
+  .preview-bar select{
+    background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.3);
+    border-radius:8px; padding:6px 10px; font-size:13px;
+  }
+  .preview-bar select option{color:#111;}
+
+  /* ---- shared card / table styles ---- */
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);}
+  .btn{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:9px 16px; border-radius:10px; border:1px solid transparent;
+    font-size:13px; font-weight:500;
+  }
+  .btn-primary{background:var(--emerald-deep); color:#fff;}
+  .btn-primary:hover{background:var(--emerald);}
+  .btn-outline{background:transparent; border-color:var(--border); color:var(--fg);}
+  .btn-outline:hover{background:var(--muted);}
+  .btn-ghost{background:transparent; padding:7px; border-radius:8px; color:var(--muted-fg);}
+  .btn-ghost:hover{background:var(--muted); color:var(--fg);}
+  .pill{
+    display:inline-block; padding:2px 10px; border-radius:999px;
+    font-size:10px; text-transform:uppercase; letter-spacing:.06em; background:var(--muted); color:var(--muted-fg);
+  }
+  .pill-published{background:rgba(47,125,99,.12); color:var(--emerald-deep);}
+  .pill-draft{background:var(--gold-soft); color:var(--gold-dark);}
+  .pill-sahih{background:rgba(47,125,99,.12); color:var(--emerald-deep);}
+  .pill-hasan{background:var(--gold-soft); color:var(--gold-dark);}
+  .pill-daif{background:rgba(192,57,43,.1); color:var(--destructive);}
+  input[type=text], input[type=search], textarea, select.input{
+    width:100%; border:1px solid var(--border); border-radius:10px; padding:9px 12px; font-size:13px;
+    font-family:inherit; background:#fff; color:var(--fg);
+  }
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{
+    text-align:left; padding:12px 16px; background:var(--muted); color:var(--muted-fg);
+    font-size:11px; text-transform:uppercase; letter-spacing:.06em; font-weight:500;
+  }
+  tbody td{padding:12px 16px; border-top:1px solid var(--border); vertical-align:middle;}
+  tbody tr:hover{background:rgba(0,0,0,.015);}
+  .truncate{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:320px; display:block;}
+
+  /* ---- layout: public site ---- */
+  .site-topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; border-bottom:1px solid var(--border); background:var(--card);
+  }
+  .logo{font-family:'Instrument Serif',serif; font-size:22px; color:var(--emerald-deep);}
+  .site-search{
+    flex:1; max-width:420px; margin:0 24px; position:relative;
+  }
+  .hero{
+    text-align:center; padding:70px 20px 50px; background:
+      radial-gradient(circle at 20% 20%, rgba(207,165,60,.08), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(26,77,62,.06), transparent 45%);
+  }
+  .hero h1{font-family:'Instrument Serif',serif; font-size:44px; color:var(--emerald-deep); margin:0 0 14px; line-height:1.15;}
+  .hero p{color:var(--muted-fg); max-width:520px; margin:0 auto 26px; font-size:15px;}
+  .cat-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px;
+    max-width:1000px; margin:0 auto; padding:0 24px 60px;
+  }
+  .cat-card{
+    padding:20px 16px; text-align:center; border-radius:var(--radius); border:1px solid var(--border);
+    background:var(--card); transition:.15s;
+  }
+  .cat-card:hover{border-color:var(--gold); box-shadow:var(--shadow);}
+  .cat-card .ico{
+    width:40px; height:40px; margin:0 auto 10px; border-radius:12px; background:var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; color:var(--gold-dark); font-size:18px;
+  }
+  .cat-card .name{font-size:13px; font-weight:500;}
+
+  /* ---- layout: admin ---- */
+  .admin-shell{display:flex; min-height:calc(100vh - 40px);}
+  .admin-side{
+    width:230px; flex-shrink:0; background:var(--card); border-right:1px solid var(--border);
+    display:flex; flex-direction:column;
+  }
+  .admin-side .brand{padding:18px 20px; border-bottom:1px solid var(--border);}
+  .admin-side .brand small{display:block; font-size:10px; text-transform:uppercase; letter-spacing:.15em; color:var(--muted-fg); margin-top:2px;}
+  .admin-nav{flex:1; padding:12px;}
+  .admin-nav .item{
+    display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; font-size:13.5px;
+    color:var(--muted-fg); margin-bottom:2px;
+  }
+  .admin-nav .item .dot{width:16px; text-align:center;}
+  .admin-nav .item.active{background:var(--emerald-deep); color:#fff;}
+  .admin-nav .item:not(.active):hover{background:var(--muted); color:var(--fg);}
+  .admin-main{flex:1; padding:28px 32px; overflow-x:auto;}
+  .page-head{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px;}
+  .page-head h1{font-family:'Instrument Serif',serif; font-size:28px; color:var(--emerald-deep); margin:0;}
+  .page-head p{margin:2px 0 0; font-size:13px; color:var(--muted-fg);}
+  .toolbar{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;}
+  .toolbar .search-wrap{position:relative; flex:1; min-width:220px;}
+  .toolbar .search-wrap input{padding-left:34px;}
+  .toolbar .search-wrap .ic{position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--muted-fg); font-size:14px;}
+
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; margin-bottom:26px;}
+  .stat-card{padding:16px; border-radius:var(--radius); border:1px solid var(--border); background:var(--card); box-shadow:var(--shadow);}
+  .stat-card .ic{width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; margin-bottom:10px;}
+  .stat-card .val{font-size:22px; font-weight:600;}
+  .stat-card .lab{font-size:11px; color:var(--muted-fg);}
+
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:900px){.two-col{grid-template-columns:1fr;} .admin-side{display:none;}}
+
+  .link-row{display:flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:13px; margin-bottom:6px;}
+  .link-row .arrows{display:flex; flex-direction:column; color:var(--muted-fg); font-size:10px; line-height:1.1; gap:1px;}
+  .link-row .lbl{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+  .modal-mock{border:1px dashed var(--border); border-radius:var(--radius); padding:16px; background:var(--muted); font-size:12px; color:var(--muted-fg);}
+
+  .section{display:none;}
+  .section.active{display:block;}
+
+  .breadcrumb{font-size:12px; color:var(--muted-fg); margin-bottom:6px;}
+
+  .chip{display:inline-flex; align-items:center; gap:6px; background:var(--muted); border-radius:999px; padding:4px 10px 4px 12px; font-size:12px; margin:0 6px 6px 0;}
+  .chip button{border:none; background:none; color:var(--destructive); font-size:12px; line-height:1;}
+
+  footer.note{
+    max-width:1000px; margin:40px auto 0; padding:14px 18px; border-radius:12px;
+    background:var(--gold-soft); color:var(--gold-dark); font-size:12.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-bar">
+  <span class="tag">Превью • не подключено к Supabase</span>
+  <span>Статичный макет для визуальной проверки экранов</span>
+  <div class="spacer"></div>
+  <label for="jump">Перейти к экрану:</label>
+  <select id="jump" onchange="showView(this.value)">
+    <optgroup label="Публичная часть">
+      <option value="home">Главная</option>
+      <option value="auth">Вход / регистрация</option>
+      <option value="profile">Профиль</option>
+    </optgroup>
+    <optgroup label="Админ-панель">
+      <option value="dashboard">Дашборд</option>
+      <option value="topics">Темы</option>
+      <option value="topicDetail">Управление содержимым темы</option>
+      <option value="ayahs">Аяты</option>
+      <option value="hadiths">Хадисы</option>
+      <option value="duas">Дуа</option>
+      <option value="tafsirs">Тафсиры</option>
+      <option value="users">Пользователи</option>
+      <option value="audit">Журнал</option>
+      <option value="import">Импорт</option>
+    </optgroup>
+  </select>
+</div>
+
+<!-- ================= HOME ================= -->
+<section class="section" id="view-home">
+  <div class="site-topbar">
+    <div class="logo">HIKMAH</div>
+    <div class="site-search">
+      <input type="search" placeholder="Поиск по темам, аятам, хадисам...">
+    </div>
+    <div style="display:flex; gap:14px; align-items:center; font-size:13px; color:var(--muted-fg);">
+      <span>👤 Профиль</span>
+      <span>⚙️ Настройки</span>
+    </div>
+  </div>
+  <div class="hero">
+    <h1>Изучайте Ислам через<br>достоверное знание</h1>
+    <p>Исследуйте любую тему через Коран, Сунну, тафсир и авторитетные разъяснения учёных — всё в одном месте.</p>
+    <button class="btn btn-primary">Начать изучение →</button>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card"><div class="ico">☪</div><div class="name">Столпы Ислама</div></div>
+    <div class="cat-card"><div class="ico">🤲</div><div class="name">Дуа</div></div>
+    <div class="cat-card"><div class="ico">📖</div><div class="name">Коран</div></div>
+    <div class="cat-card"><div class="ico">📜</div><div class="name">Хадис</div></div>
+    <div class="cat-card"><div class="ico">🕊</div><div class="name">Терпение</div></div>
+    <div class="cat-card"><div class="ico">🙏</div><div class="name">Благодарность</div></div>
+    <div class="cat-card"><div class="ico">👪</div><div class="name">Семья</div></div>
+    <div class="cat-card"><div class="ico">💰</div><div class="name">Халяль и харам</div></div>
+    <div class="cat-card"><div class="ico">🌙</div><div class="name">Пост</div></div>
+    <div class="cat-card"><div class="ico">⭐</div><div class="name">Имена Аллаха</div></div>
+  </div>
+  <footer class="note" style="margin-bottom:60px;">
+    Это визуальный макет с примерами текста для проверки вёрстки — не реальный контент из базы данных.
+  </footer>
+</section>
+
+<!-- ================= AUTH ================= -->
+<section class="section" id="view-auth">
+  <div style="min-height:80vh; display:flex; align-items:center; justify-content:center; padding:20px;">
+    <div class="card" style="width:100%; max-width:360px; padding:26px;">
+      <div class="breadcrumb">← На главную</div>
+      <h1 class="font-display" style="font-size:30px; color:var(--emerald-deep); margin:6px 0 2px;">Вход</h1>
+      <p style="font-size:13px; color:var(--muted-fg); margin:0 0 20px;">Войдите в свой аккаунт HIKMAH</p>
+      <label style="font-size:12px; font-weight:500;">Email</label>
+      <input type="text" placeholder="you@example.com" style="margin:6px 0 14px;">
+      <label style="font-size:12px; font-weight:500;">Пароль</label>
+      <input type="text" placeholder="••••••••" style="margin:6px 0 18px;">
+      <button class="btn btn-primary" style="width:100%; justify-content:center;">Войти</button>
+      <button style="width:100%; margin-top:14px; background:none; border:none; font-size:12px; color:var(--muted-fg);">Нет аккаунта? Зарегистрироваться</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROFILE ================= -->
+<section class="section" id="view-profile">
+  <div style="min-height:80vh; display:flex; flex-direction:column; align-items:center; padding:60px 20px;">
+    <div style="width:64px; height:64px; border-radius:18px; background:var(--gold-soft); color:var(--emerald-deep); display:flex; align-items:center; justify-content:center; font-size:26px;">👤</div>
+    <h1 class="font-display" style="font-size:28px; margin:16px 0 2px;">Амир Каримов</h1>
+    <p style="color:var(--muted-fg); font-size:13px; margin:0 0 26px;">amir@example.com</p>
+    <div style="width:100%; max-width:320px; display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-primary" style="justify-content:center;">🛡 Админ-панель</button>
+      <button class="btn btn-outline" style="justify-content:center;">Выйти</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ADMIN SHELL ================= -->
+<div id="admin-shell-wrap">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="brand">
+      <div class="logo">HIKMAH</div>
+      <small>Админ-панель</small>
+    </div>
+    <nav class="admin-nav" id="admin-nav">
+      <a class="item" data-nav="dashboard" onclick="showView('dashboard')"><span class="dot">▦</span> Дашборд</a>
+      <a class="item" data-nav="topics" onclick="showView('topics')"><span class="dot">🔖</span> Темы</a>
+      <a class="item" data-nav="ayahs" onclick="showView('ayahs')"><span class="dot">📖</span> Аяты</a>
+      <a class="item" data-nav="hadiths" onclick="showView('hadiths')"><span class="dot">📜</span> Хадисы</a>
+      <a class="item" data-nav="duas" onclick="showView('duas')"><span class="dot">🤲</span> Дуа</a>
+      <a class="item" data-nav="tafsirs" onclick="showView('tafsirs')"><span class="dot">💬</span> Тафсиры</a>
+      <a class="item" data-nav="users" onclick="showView('users')"><span class="dot">👥</span> Пользователи</a>
+      <a class="item" data-nav="audit" onclick="showView('audit')"><span class="dot">🕓</span> Журнал</a>
+      <a class="item" data-nav="import" onclick="showView('import')"><span class="dot">⬆</span> Импорт</a>
+    </nav>
+    <div style="padding:12px; border-top:1px solid var(--border); font-size:11px; color:var(--muted-fg);">
+      admin@hikmah.app
+      <button class="btn btn-outline" style="width:100%; justify-content:center; margin-top:8px;">Выйти</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- DASHBOARD -->
+    <section class="section" id="view-dashboard">
+      <h1 class="font-display" style="font-size:28px; color:var(--emerald-deep); margin:0;">Дашборд</h1>
+      <p style="font-size:13px; color:var(--muted-fg); margin:2px 0 20px;">Обзор контента и активности</p>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="ic" style="background:rgba(47,125,99,.12); color:var(--emerald-deep);">🔖</div><div class="val">37</div><div class="lab">Темы</div></div>
+        <div class="stat-card"><div class="ic" style="background:var(--gold-soft); color:var(--gold-dark);">📖</div><div class="val">612</div><div class="lab">Аяты</div></div>
+        <div class="stat-card"><div class="ic" style="background:#e8f1fb; color:#1d4ed8;">📜</div><div class="val">284</div><div class="lab">Хадисы</div></div>
+        <div class="stat-card"><div class="ic" style="background:#f3e8fb; color:#7e22ce;">🤲</div><div class="val">96</div><div class="lab">Дуа</div></div>
+        <div class="stat-card"><div class="ic" style="background:#fdece0; color:#c2410c;">👁</div><div class="val">153</div><div class="lab">Тафсиры</div></div>
+        <div class="stat-card"><div class="ic" style="background:#fce7f3; color:#be185d;">👥</div><div class="val">412</div><div class="lab">Пользователи</div></div>
+      </div>
+      <div class="two-col">
+        <div class="card" style="padding:20px;">
+          <h2 class="font-display" style="font-size:19px; margin:0 0 12px;">Последние темы</h2>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--border); font-size:13px;"><span>Терпение (Сабр)</span><span class="pill pill-published">published</span></div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--border); font-size:13px;"><span>Имена Аллаха</span><span class="pill pill-draft">draft</span></div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--border); font-size:13px;"><span>Пост в Рамадан</span><span class="pill pill-published">published</span></div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--border); font-size:13px;"><span>Права родителей</span><span class="pill pill-published">published</span></div>
+        </div>
+        <div class="card" style="padding:20px;">
+          <h2 class="font-display" style="font-size:19px; margin:0 0 12px;">Журнал действий</h2>
+          <div style="display:flex; gap:8px; padding:8px 0; border-top:1px solid var(--border); font-size:12px;">🕓 <b>update</b><span style="color:var(--muted-fg);">topic</span><span style="margin-left:auto; color:var(--muted-fg);">02.07 21:14</span></div>
+          <div style="display:flex; gap:8px; padding:8px 0; border-top:1px solid var(--border); font-size:12px;">🕓 <b>link_ayah</b><span style="color:var(--muted-fg);">topic</span><span style="margin-left:auto; color:var(--muted-fg);">02.07 20:58</span></div>
+          <div style="display:flex; gap:8px; padding:8px 0; border-top:1px solid var(--border); font-size:12px;">🕓 <b>create</b><span style="color:var(--muted-fg);">hadith</span><span style="margin-left:auto; color:var(--muted-fg);">02.07 18:02</span></div>
+          <div style="display:flex; gap:8px; padding:8px 0; border-top:1px solid var(--border); font-size:12px;">🕓 <b>delete</b><span style="color:var(--muted-fg);">dua</span><span style="margin-left:auto; color:var(--muted-fg);">01.07 12:40</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICS -->
+    <section class="section" id="view-topics">
+      <div class="page-head">
+        <div><h1>Темы</h1><p>37 записей</p></div>
+        <button class="btn btn-primary">＋ Добавить</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap"><span class="ic">🔍</span><input type="text" placeholder="Поиск..."></div>
+        <select class="input" style="width:160px;"><option>Все статусы</option><option>Черновик</option><option>Опубликовано</option></select>
+      </div>
+      <div class="card" style="overflow:hidden;">
+        <table>
+          <thead><tr><th>Название</th><th>Slug</th><th>Мин</th><th>Статус</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Терпение (Сабр)</td><td>sabr</td><td>6</td><td><span class="pill pill-published">published</span></td>
+              <td><div style="display:flex; justify-content:flex-end; gap:2px;">
+                <button class="btn-ghost" title="Управление содержимым" onclick="showView('topicDetail')">🔗</button>
+                <button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button>
+              </div></td></tr>
+            <tr><td>Имена Аллаха</td><td>asma-ul-husna</td><td>10</td><td><span class="pill pill-draft">draft</span></td>
+              <td><div style="display:flex; justify-content:flex-end; gap:2px;">
+                <button class="btn-ghost" onclick="showView('topicDetail')">🔗</button><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button>
+              </div></td></tr>
+            <tr><td>Пост в Рамадан</td><td>ramadan-fasting</td><td>8</td><td><span class="pill pill-published">published</span></td>
+              <td><div style="display:flex; justify-content:flex-end; gap:2px;">
+                <button class="btn-ghost" onclick="showView('topicDetail')">🔗</button><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button>
+              </div></td></tr>
+            <tr><td>Права родителей</td><td>parents-rights</td><td>5</td><td><span class="pill pill-published">published</span></td>
+              <td><div style="display:flex; justify-content:flex-end; gap:2px;">
+                <button class="btn-ghost" onclick="showView('topicDetail')">🔗</button><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button>
+              </div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TOPIC DETAIL (linking page) -->
+    <section class="section" id="view-topicDetail">
+      <div class="breadcrumb">← К списку тем</div>
+      <h1 class="font-display" style="font-size:28px; color:var(--emerald-deep); margin:4px 0 0;">Терпение (Сабр)</h1>
+      <p style="font-size:13px; color:var(--muted-fg); margin:2px 0 20px;">Привяжите аяты, хадисы, дуа и связанные темы к этой теме</p>
+
+      <div style="display:flex; flex-direction:column; gap:16px; max-width:640px;">
+        <div class="card" style="padding:18px;">
+          <h2 class="font-display" style="font-size:18px; color:var(--emerald-deep); margin:0;">Аяты</h2>
+          <p style="font-size:11px; color:var(--muted-fg); margin:2px 0 12px;">3 привязано</p>
+          <div class="link-row"><span class="arrows">▲▼</span><span class="lbl">Аль-Бакара 2:153 — Пример перевода о помощи через терпение и молитву</span><button class="btn-ghost" style="color:var(--destructive); padding:2px 6px;">✕</button></div>
+          <div class="link-row"><span class="arrows">▲▼</span><span class="lbl">Аз-Зумар 39:10 — Пример перевода о награде для терпеливых</span><button class="btn-ghost" style="color:var(--destructive); padding:2px 6px;">✕</button></div>
+          <div class="link-row"><span class="arrows">▲▼</span><span class="lbl">Аль-Асp 103:3 — Пример перевода о взаимном наставлении к терпению</span><button class="btn-ghost" style="color:var(--destructive); padding:2px 6px;">✕</button></div>
+          <div style="margin-top:10px; position:relative;"><span style="position:absolute; left:11px; top:11px; color:var(--muted-fg); font-size:13px;">🔍</span><input type="text" placeholder="Найти и добавить..." style="padding-left:32px;"></div>
+        </div>
+
+        <div class="card" style="padding:18px;">
+          <h2 class="font-display" style="font-size:18px; color:var(--emerald-deep); margin:0;">Хадисы</h2>
+          <p style="font-size:11px; color:var(--muted-fg); margin:2px 0 12px;">2 привязано</p>
+          <div class="link-row"><span class="arrows">▲▼</span><span class="lbl">Муслим №2999 — Пример перевода о дивных делах верующего</span><button class="btn-ghost" style="color:var(--destructive); padding:2px 6px;">✕</button></div>
+          <div class="link-row"><span class="arrows">▲▼</span><span class="lbl">Бухари №5645 — Пример перевода о болезни как искуплении грехов</span><button class="btn-ghost" style="color:var(--destructive); padding:2px 6px;">✕</button></div>
+          <div style="margin-top:10px; position:relative;"><span style="position:absolute; left:11px; top:11px; color:var(--muted-fg); font-size:13px;">🔍</span><input type="text" placeholder="Найти и добавить..." style="padding-left:32px;"></div>
+        </div>
+
+        <div class="card" style="padding:18px;">
+          <h2 class="font-display" style="font-size:18px; color:var(--emerald-deep); margin:0;">Дуа</h2>
+          <p style="font-size:11px; color:var(--muted-fg); margin:2px 0 12px;">1 привязано</p>
+          <div class="link-row"><span class="arrows">▲▼</span><span class="lbl">Дуа при трудностях</span><button class="btn-ghost" style="color:var(--destructive); padding:2px 6px;">✕</button></div>
+          <div style="margin-top:10px; position:relative;"><span style="position:absolute; left:11px; top:11px; color:var(--muted-fg); font-size:13px;">🔍</span><input type="text" placeholder="Найти и добавить..." style="padding-left:32px;"></div>
+        </div>
+
+        <div class="card" style="padding:18px;">
+          <h2 class="font-display" style="font-size:18px; color:var(--emerald-deep); margin:0;">Связанные темы</h2>
+          <p style="font-size:11px; color:var(--muted-fg); margin:2px 0 12px;">2 связано</p>
+          <div><span class="chip">Благодарность<button>✕</button></span><span class="chip">Испытания и трудности<button>✕</button></span></div>
+          <div style="margin-top:10px; position:relative;"><span style="position:absolute; left:11px; top:11px; color:var(--muted-fg); font-size:13px;">🔍</span><input type="text" placeholder="Найти тему..." style="padding-left:32px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AYAHS -->
+    <section class="section" id="view-ayahs">
+      <div class="page-head"><div><h1>Аяты</h1><p>612 записей</p></div><button class="btn btn-primary">＋ Добавить</button></div>
+      <div class="toolbar">
+        <div class="search-wrap"><span class="ic">🔍</span><input type="text" placeholder="Поиск по переводу..."></div>
+        <select class="input" style="width:160px;"><option>Все статусы</option></select>
+      </div>
+      <div class="card" style="overflow:hidden;">
+        <table>
+          <thead><tr><th>Сура</th><th>№ суры</th><th>№ аята</th><th>Перевод</th><th>Статус</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Аль-Бакара</td><td>2</td><td>153</td><td><span class="truncate">Пример перевода о помощи через терпение и молитву</span></td><td><span class="pill pill-published">published</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+            <tr><td>Аз-Зумар</td><td>39</td><td>10</td><td><span class="truncate">Пример перевода о награде для терпеливых без счёта</span></td><td><span class="pill pill-published">published</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+            <tr><td>Аль-Аср</td><td>103</td><td>3</td><td><span class="truncate">Пример перевода о взаимном наставлении к истине и терпению</span></td><td><span class="pill pill-draft">draft</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-mock" style="margin-top:16px;">💡 Форма редактирования аята открывается в модальном окне: арабский текст (RTL, шрифт Amiri), транскрипция, перевод, краткий тафсир, причина ниспослания, аудио — как в остальных сущностях.</div>
+    </section>
+
+    <!-- HADITHS -->
+    <section class="section" id="view-hadiths">
+      <div class="page-head"><div><h1>Хадисы</h1><p>284 записи</p></div><button class="btn btn-primary">＋ Добавить</button></div>
+      <div class="toolbar">
+        <div class="search-wrap"><span class="ic">🔍</span><input type="text" placeholder="Поиск по переводу..."></div>
+        <select class="input" style="width:160px;"><option>Все статусы</option></select>
+      </div>
+      <div class="card" style="overflow:hidden;">
+        <table>
+          <thead><tr><th>Сборник</th><th>№</th><th>Степень</th><th>Перевод</th><th>Статус</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Муслим</td><td>2999</td><td><span class="pill pill-sahih">sahih</span></td><td><span class="truncate">Пример перевода о дивных делах верующего в любых обстоятельствах</span></td><td><span class="pill pill-published">published</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+            <tr><td>Бухари</td><td>5645</td><td><span class="pill pill-sahih">sahih</span></td><td><span class="truncate">Пример перевода о болезни как искуплении грехов</span></td><td><span class="pill pill-published">published</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+            <tr><td>Тирмизи</td><td>2516</td><td><span class="pill pill-hasan">hasan</span></td><td><span class="truncate">Пример перевода о сохранении границ Аллаха</span></td><td><span class="pill pill-draft">draft</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DUAS -->
+    <section class="section" id="view-duas">
+      <div class="page-head"><div><h1>Дуа</h1><p>96 записей</p></div><button class="btn btn-primary">＋ Добавить</button></div>
+      <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input type="text" placeholder="Поиск по названию..."></div></div>
+      <div class="card" style="overflow:hidden;">
+        <table>
+          <thead><tr><th>Название</th><th>Когда</th><th>Источник</th><th>Статус</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Дуа при трудностях</td><td>В моменты испытаний</td><td>Абу Дауд</td><td><span class="pill pill-published">published</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+            <tr><td>Дуа перед едой</td><td>Перед приёмом пищи</td><td>Тирмизи</td><td><span class="pill pill-published">published</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAFSIRS -->
+    <section class="section" id="view-tafsirs">
+      <div class="page-head"><div><h1>Тафсиры</h1><p>153 записи</p></div><button class="btn btn-primary">＋ Добавить</button></div>
+      <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input type="text" placeholder="Поиск по тексту..."></div></div>
+      <div class="card" style="overflow:hidden;">
+        <table>
+          <thead><tr><th>Автор</th><th>Название</th><th>Уровень</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Ибн Касир</td><td>Тафсир аль-Бакара 153</td><td>medium</td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+            <tr><td>ас-Саади</td><td>Тафсир аз-Зумар 10</td><td>short</td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">✎</button><button class="btn-ghost" style="color:var(--destructive);">🗑</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- USERS -->
+    <section class="section" id="view-users">
+      <h1 class="font-display" style="font-size:28px; color:var(--emerald-deep); margin:0;">Пользователи</h1>
+      <p style="font-size:13px; color:var(--muted-fg); margin:2px 0 16px;">412 пользователей</p>
+      <input type="text" placeholder="Поиск по email или имени..." style="max-width:320px; margin-bottom:16px;">
+      <div class="card" style="overflow:hidden;">
+        <table>
+          <thead><tr><th>Email</th><th>Имя</th><th>Зарегистрирован</th><th>Последний вход</th><th>Роли</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>admin@hikmah.app</td><td>Амир Каримов</td><td>01.01.2026</td><td>02.07.2026</td><td><span class="pill" style="background:var(--emerald-deep); color:#fff;">admin</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">🛡✓</button><button class="btn-ghost">🛡</button></div></td></tr>
+            <tr><td>mod@hikmah.app</td><td>Диляра Юсупова</td><td>14.02.2026</td><td>01.07.2026</td><td><span class="pill" style="background:var(--gold); color:var(--emerald-deep);">moderator</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">🛡✓</button><button class="btn-ghost">🛡</button></div></td></tr>
+            <tr><td>user1@example.com</td><td>—</td><td>03.03.2026</td><td>28.06.2026</td><td><span class="pill">user</span></td><td><div style="display:flex; justify-content:flex-end; gap:2px;"><button class="btn-ghost">🛡✓</button><button class="btn-ghost">🛡</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- AUDIT -->
+    <section class="section" id="view-audit">
+      <h1 class="font-display" style="font-size:28px; color:var(--emerald-deep); margin:0;">Журнал изменений</h1>
+      <p style="font-size:13px; color:var(--muted-fg); margin:2px 0 16px;">500 записей (последние 500)</p>
+      <div class="card" style="overflow:hidden;">
+        <table>
+          <thead><tr><th>Время</th><th>Действие</th><th>Тип</th><th>ID сущности</th><th>Пользователь</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>02.07.2026 21:14</td><td><span class="pill pill-draft">update</span></td><td>topic</td><td>a1b2c3d4</td><td>f9e8d7c6</td><td><button class="btn-ghost">👁</button></td></tr>
+            <tr><td>02.07.2026 20:58</td><td><span class="pill pill-published">create</span></td><td>topic</td><td>a1b2c3d4</td><td>f9e8d7c6</td><td><button class="btn-ghost">👁</button></td></tr>
+            <tr><td>01.07.2026 12:40</td><td><span class="pill" style="background:rgba(192,57,43,.1); color:var(--destructive);">delete</span></td><td>dua</td><td>7a6b5c4d</td><td>f9e8d7c6</td><td><button class="btn-ghost">👁</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- IMPORT -->
+    <section class="section" id="view-import">
+      <h1 class="font-display" style="font-size:28px; color:var(--emerald-deep); margin:0;">Массовый импорт</h1>
+      <p style="font-size:13px; color:var(--muted-fg); margin:2px 0 20px;">Загрузите данные в формате JSON или CSV</p>
+      <div style="max-width:640px;">
+        <label style="font-size:12px; font-weight:500;">Таблица</label>
+        <select class="input" style="max-width:220px; margin:6px 0 14px;"><option>ayahs</option><option>hadiths</option><option>duas</option><option>tafsirs</option><option>topics</option><option>categories</option></select>
+        <label style="font-size:12px; font-weight:500;">Или вставьте данные</label>
+        <textarea rows="8" style="margin-top:6px; font-family:monospace; font-size:12px;" placeholder='[{"surah_name":"Аль-Бакара","surah_number":2,"ayah_number":153,...}]'></textarea>
+        <button class="btn btn-primary" style="margin-top:14px;">⬆ Импортировать</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+</div>
+
+<script>
+  const publicViews = ['home','auth','profile'];
+  const adminViews = ['dashboard','topics','topicDetail','ayahs','hadiths','duas','tafsirs','users','audit','import'];
+
+  function showView(id){
+    // toggle admin shell visibility
+    document.getElementById('admin-shell-wrap').style.display = adminViews.includes(id) ? 'block' : 'none';
+
+    publicViews.forEach(v => document.getElementById('view-'+v).classList.remove('active'));
+    adminViews.forEach(v => document.getElementById('view-'+v).classList.remove('active'));
+    document.getElementById('view-'+id).classList.add('active');
+
+    document.querySelectorAll('.admin-nav .item').forEach(el => el.classList.remove('active'));
+    const navMap = {dashboard:'dashboard', topics:'topics', topicDetail:'topics', ayahs:'ayahs', hadiths:'hadiths', duas:'duas', tafsirs:'tafsirs', users:'users', audit:'audit', import:'import'};
+    const navEl = document.querySelector('.admin-nav [data-nav="'+(navMap[id]||id)+'"]');
+    if(navEl) navEl.classList.add('active');
+
+    document.getElementById('jump').value = id;
+    window.scrollTo(0,0);
+  }
+
+  showView('home');
+</script>
+
+</body>
+</html>
